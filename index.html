@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preparation: Lists, 2D Lists, Records and Tuples</title>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<style>
+  :root {
+    --blue: #007ba6;
+    --text: #333333;
+    --muted: #5f6b73;
+    --card: #fafafa;
+    --border: #e0e0e0;
+    --teal: #00796b;
+    --teal-bg: #e0f2f1;
+    --red: #c62828;
+    --grey-bg: #f5f5f5;
+    --grey-line: #78909c;
+    --dark: #263238;
+    --dark-text: #eceff1;
+    --pass-bg: #e8f5e9;
+    --fail-bg: #fdecea;
+    --hint-bg: #fff8e1;
+    --hint-line: #f9a825;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #ffffff;
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+  .page { max-width: 900px; margin: 0 auto; padding: 10px 16px 40px; }
+  .timebar {
+    background: #eceff1;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: right;
+    margin: 10px 0 25px;
+    border-right: 5px solid var(--blue);
+  }
+  h1 {
+    color: var(--blue);
+    border-bottom: 3px solid var(--blue);
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 1.75rem;
+    line-height: 1.3;
+  }
+  h3 { color: var(--blue); margin-top: 0; font-size: 1.2rem; }
+  h4 { color: var(--blue); margin: 20px 0 6px; font-size: 1rem; }
+  .intro { font-size: 15px; }
+  .status { font-size: 14px; color: var(--muted); margin: 0 0 25px; }
+  .card {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+    scroll-margin-top: 10px;
+  }
+  .instruction {
+    color: var(--teal);
+    background: var(--teal-bg);
+    padding: 10px 15px;
+    border-left: 5px solid var(--teal);
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
+  .key { color: var(--red); }
+  .guide {
+    background: var(--grey-bg);
+    border-left: 4px solid var(--grey-line);
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 4px;
+  }
+  .guide ul { margin: 5px 0 0; padding-left: 20px; font-size: 14px; }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+    background: #eceff1;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 0.92em;
+  }
+  pre.dark {
+    background: var(--dark);
+    color: var(--dark-text);
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    margin: 8px 0;
+  }
+  p code, li code, td code { white-space: nowrap; }
+  pre.dark code { background: none; padding: 0; color: inherit; font-size: inherit; white-space: pre; }
+  pre.dark .c { color: #80cbc4; }
+  .table-wrap { overflow-x: auto; margin: 10px 0; }
+  table.std { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.std th { background: var(--blue); color: #ffffff; padding: 8px; text-align: left; border: 1px solid var(--border); }
+  table.std td { padding: 8px; border: 1px solid var(--border); background: #ffffff; vertical-align: top; }
+  table.std a { color: var(--blue); }
+  table.index { border-collapse: collapse; font-family: Consolas, "Courier New", monospace; text-align: center; background: #fff; }
+  table.index th, table.index td { border: 1px solid var(--border); padding: 6px 10px; min-width: 44px; }
+  table.index th { font-family: Arial, sans-serif; font-weight: normal; font-size: 13px; color: var(--muted); text-align: left; white-space: nowrap; background: #f7f9fa; }
+  table.index td.ch { font-weight: bold; font-size: 1.15rem; color: var(--blue); background: #e1f3f9; }
+  table.index td.hl { box-shadow: inset 0 0 0 3px var(--teal); }
+  table.index td.neg { color: var(--red); }
+  .task {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--blue);
+    border-radius: 6px;
+    padding: 4px 16px 16px;
+    margin-top: 20px;
+  }
+  .task h4 { margin-top: 12px; }
+  ol.steps { padding-left: 22px; }
+
+  /* Sandbox */
+  .sandbox { border: 1px solid #cfd8dc; border-radius: 6px; overflow: hidden; margin: 12px 0; background: #fff; }
+  .sandbox-head { background: var(--blue); color: #fff; font-size: 13px; padding: 6px 10px; font-weight: bold; }
+  .sandbox textarea {
+    display: block; width: 100%; min-height: 140px;
+    border: 0; border-bottom: 1px solid #cfd8dc;
+    padding: 10px;
+    font-family: Consolas, "Courier New", monospace; font-size: 14px; line-height: 1.5;
+    resize: vertical; background: #fbfcfc; color: #1b1f23; tab-size: 4;
+    white-space: pre; overflow-x: auto;
+  }
+  .sandbox textarea:focus { outline: 2px solid #4fb3d9; outline-offset: -2px; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 10px; background: #f5f7f8; border-bottom: 1px solid #cfd8dc; }
+  button { font: inherit; font-size: 14px; border-radius: 4px; padding: 6px 14px; cursor: pointer; border: 1px solid transparent; }
+  button:disabled { opacity: 0.6; cursor: wait; }
+  .run { background: var(--blue); color: #fff; }
+  .run:hover { background: #00627f; }
+  .check { background: var(--teal); color: #fff; }
+  .check:hover { background: #005a4f; }
+  .reset { background: #fff; color: var(--text); border-color: #cfd8dc; }
+  .reset:hover { background: #eceff1; }
+  .output {
+    margin: 0; min-height: 44px; padding: 10px 12px;
+    background: var(--dark); color: var(--dark-text);
+    font-family: Consolas, "Courier New", monospace; font-size: 14px;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .output.error { color: #ffab91; }
+  .feedback { display: none; padding: 10px 12px; font-size: 14px; white-space: pre-wrap; border-top: 1px solid #cfd8dc; }
+  .feedback.pass { display: block; background: var(--pass-bg); color: #1b5e20; }
+  .feedback.fail { display: block; background: var(--fail-bg); color: #b71c1c; font-family: Consolas, "Courier New", monospace; }
+
+  details { border-radius: 4px; padding: 8px 12px; margin-top: 10px; }
+  details.answer { background: var(--teal-bg); border: 1px solid #b2dfdb; }
+  details.hint { background: var(--hint-bg); border: 1px solid #ffe082; }
+  summary { cursor: pointer; font-weight: bold; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  details.answer summary { color: var(--teal); }
+  details.hint summary { color: #8d6e00; }
+  details[open] summary { margin-bottom: 6px; }
+
+  /* Video */
+  .video { position: relative; padding-top: 56.25%; margin-top: 10px; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 6px; }
+
+  /* Checklist */
+  .checklist { list-style: none; padding: 0; margin: 0; }
+  .checklist li { margin: 8px 0; }
+  .checklist label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+  .checklist input { width: 18px; height: 18px; margin-top: 3px; flex: 0 0 18px; accent-color: var(--teal); }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.45rem; }
+    .card { padding: 16px 14px; }
+    .buttons button { flex: 1 1 auto; }
+  }
+
+  .idea {
+    background: #e1f3f9;
+    border-left: 5px solid var(--blue);
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin: 12px 0;
+  }
+  .step-label { font-weight: bold; color: var(--blue); }
+  table.grid2d { border-collapse: collapse; font-family: Consolas, "Courier New", monospace; text-align: center; background: #fff; }
+  table.grid2d th { font-family: Arial, sans-serif; font-weight: normal; font-size: 13px; color: var(--muted); padding: 4px 10px; background: #f7f9fa; border: 1px solid var(--border); white-space: nowrap; }
+  table.grid2d td { border: 1px solid var(--border); padding: 6px 14px; min-width: 64px; }
+  table.grid2d td b { display: block; font-size: 1.15rem; color: var(--blue); }
+  table.grid2d td span { font-size: 12px; color: var(--muted); }
+  table.grid2d td.hl { box-shadow: inset 0 0 0 3px var(--teal); background: #e0f2f1; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="timebar">⏱️ Estimated Completion Time: 55 minutes | Complete before the U2.08 lesson</div>
+<h1>Preparation: Lists, 2D Lists, Records and Tuples</h1>
+<p class="intro">You do not need to know anything about lists before you start. This page explains everything from the beginning, one small step at a time. Read each part, <strong>guess</strong> what the code will print, then press <strong>Run</strong> to see if you were right. Finish each part with its short task, then try <strong>ONE</strong> Pre-Lesson Challenge at the end. There is nothing to submit.</p>
+<p class="status" id="py-status">⏳ Loading Python… the first run can take a few seconds.</p>
+
+<!-- ================= OVERVIEW ================= -->
+<div class="card">
+  <h3>🗺️ What You Will Cover</h3>
+  <div class="table-wrap">
+  <table class="std">
+    <thead><tr><th>Part</th><th>What you will learn</th><th>Key Tools</th><th>Time</th></tr></thead>
+    <tbody>
+      <tr><td><a href="#part1"><strong>Part 1: What Is a List?</strong></a></td><td>How to store many values under one name</td><td><code>[ ]</code>, <code>[0]</code>, <code>len()</code></td><td>5 min</td></tr>
+      <tr><td><a href="#part2"><strong>Part 2: Changing a List</strong></a></td><td>How to add, change and remove items</td><td><code>append()</code>, <code>insert()</code>, <code>pop()</code>, <code>del</code></td><td>8 min</td></tr>
+      <tr><td><a href="#part3"><strong>Part 3: Looping Through a List</strong></a></td><td>How to visit every item, one at a time</td><td><code>for item in</code>, <code>range(len())</code></td><td>8 min</td></tr>
+      <tr><td><a href="#part4"><strong>Part 4: 2D Lists (Tables)</strong></a></td><td>How to store a grid of rows and columns</td><td><code>[row][col]</code>, nested loops</td><td>10 min</td></tr>
+      <tr><td><a href="#part5"><strong>Part 5: Records</strong></a></td><td>How to store several facts about one thing</td><td>lists of records</td><td>5 min</td></tr>
+      <tr><td><a href="#part6"><strong>Part 6: Tuples and Converting</strong></a></td><td>Lists that cannot change, and switching between types</td><td><code>( )</code>, <code>list()</code>, <code>tuple()</code>, <code>set()</code></td><td>5 min</td></tr>
+      <tr><td><a href="#part7"><strong>Part 7: Copying a List Safely</strong></a></td><td>Why <code>b = a</code> is not a copy</td><td><code>copy.copy()</code>, <code>copy.deepcopy()</code></td><td>4 min</td></tr>
+      <tr><td><a href="#challenge"><strong>Pre-Lesson Challenge</strong></a></td><td>Putting it all together</td><td>Option A or Option B</td><td>10 min</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ================= KEY WORDS ================= -->
+<div class="card">
+  <h3>📖 Key Words</h3>
+  <p style="margin-top: 0;">You will see these words throughout the page. Come back here if you forget one.</p>
+  <div class="table-wrap">
+  <table class="std">
+    <thead><tr><th>Word</th><th>Simple meaning</th></tr></thead>
+    <tbody>
+      <tr><td><strong>List</strong></td><td>One variable that holds many values in order, written in square brackets <code>[ ]</code>.</td></tr>
+      <tr><td><strong>Item</strong></td><td>One value inside a list. (Sometimes called an <em>element</em>.)</td></tr>
+      <tr><td><strong>Index</strong></td><td>The position number of an item. Counting starts at 0.</td></tr>
+      <tr><td><strong>Array</strong></td><td>In Python, a list where every item is the same type, e.g. all whole numbers.</td></tr>
+      <tr><td><strong>Traverse</strong></td><td>To go through a list, visiting every item in turn, usually with a loop.</td></tr>
+      <tr><td><strong>2D list</strong></td><td>A list of lists: a table with <em>rows</em> going across and <em>columns</em> going down.</td></tr>
+      <tr><td><strong>Record</strong></td><td>A small list of facts (<em>fields</em>) about one thing, e.g. one book's ID, title and year.</td></tr>
+      <tr><td><strong>Tuple</strong></td><td>Like a list, but written in round brackets <code>( )</code>, and it can never be changed.</td></tr>
+      <tr><td><strong>Immutable</strong></td><td>Cannot be changed after it is made.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ================= VIDEO (hidden until a link is added) ================= -->
+<div class="card" id="video-card">
+  <h3>📺 Watch First</h3>
+  <p style="margin: 0;">Watch this short video before starting Part 1.</p>
+  <div class="video" id="video-frame"></div>
+</div>
+
+<!-- ================= PART 1 ================= -->
+<div class="card" id="part1">
+  <h3>Part 1: What Is a List?</h3>
+  <div class="instruction">👉 INSTRUCTION: Read the explanation, then complete Task 1.</div>
+
+  <p>So far, each variable you have used holds <strong>one</strong> value. But what if you need to store 30 colours, or 100 test scores? Making 100 separate variables would be slow, and you could not loop through them.</p>
+  <p>A <span class="key">list</span> solves this. It is <strong>one variable that holds many values</strong>, in order. You write the items inside square brackets, with commas between them.</p>
+  <pre class="dark"><code>colours = ["red", "green", "blue", "yellow"]
+ages = [15, 16, 16, 17]
+mixed = ["Ali", 16, True]      <span class="c"># a list can hold different types</span></code></pre>
+  <div class="idea">💡 <strong>Think of a list like a row of numbered lockers.</strong> Each locker holds one item, and each locker has a number. Just like strings, the numbers start at <strong>0</strong>.</div>
+
+  <div class="table-wrap">
+  <table class="index" aria-label="Index positions for the colours list">
+    <tr><th>Item</th><td class="ch">"red"</td><td class="ch">"green"</td><td class="ch">"blue"</td><td class="ch">"yellow"</td></tr>
+    <tr><th>Index</th><td>0</td><td>1</td><td>2</td><td>3</td></tr>
+    <tr><th>Negative index</th><td class="neg">-4</td><td class="neg">-3</td><td class="neg">-2</td><td class="neg">-1</td></tr>
+  </table>
+  </div>
+
+  <p>To get one item, write the list name and the index in square brackets. <code>len()</code> tells you how many items there are.</p>
+  <pre class="dark"><code>print(colours[0])      <span class="c"># red     (the first item)</span>
+print(colours[2])      <span class="c"># blue</span>
+print(colours[-1])     <span class="c"># yellow  (-1 always means the last item)</span>
+print(len(colours))    <span class="c"># 4</span></code></pre>
+  <p>Asking for an index that does not exist, such as <code>colours[4]</code>, causes an <code>IndexError</code>.</p>
+  <div class="idea">📌 <strong>Exam word: array.</strong> Python has no separate "array" type. When a question says <em>array</em>, it means a list where every item is the same type, e.g. <code>ages</code> above.</div>
+
+  <div class="task">
+    <h4>🛠️ Task 1: Shopping Basket</h4>
+    <p>Use the exact variable names below.</p>
+    <ol class="steps">
+      <li><code>first_item</code>: the first item in <code>basket</code></li>
+      <li><code>last_item</code>: the last item, using a <strong>negative index</strong></li>
+      <li><code>item_count</code>: how many items are in the basket, using <code>len()</code></li>
+    </ol>
+    <p><strong>Expected Output:</strong></p>
+    <pre class="dark"><code>bread rice 5</code></pre>
+    <div class="sandbox" data-check="t1" data-verify="Check Task 1">
+<textarea spellcheck="false">basket = ["bread", "milk", "eggs", "apples", "rice"]
+
+# Create first_item, last_item and item_count below
+
+
+print(first_item, last_item, item_count)</textarea>
+    </div>
+    <details class="hint">
+      <summary>💡 Need a hint?</summary>
+      <p style="margin: 0;">The first item is at index <code>0</code>. Use <code>basket[-1]</code> for the last item, so your code still works if the basket gets longer.</p>
+    </details>
+  </div>
+</div>
+
+<!-- ================= PART 2 ================= -->
+<div class="card" id="part2">
+  <h3>Part 2: Changing a List</h3>
+  <div class="instruction">👉 INSTRUCTION: Read the table, guess the output of the sandbox code, then complete Task 2.</div>
+
+  <p>Unlike a string, a list <strong>can</strong> be changed after you make it. You can add items, swap items and remove items.</p>
+  <div class="table-wrap">
+  <table class="std">
+    <thead><tr><th>Code</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>songs.append("Echoes")</code></td><td>Adds an item to the <strong>end</strong> of the list</td></tr>
+      <tr><td><code>songs.insert(0, "Warm Up")</code></td><td>Adds an item <strong>at</strong> index 0. Everything after it moves along one place.</td></tr>
+      <tr><td><code>songs[2] = "Skyline (Live)"</code></td><td>Replaces the item at index 2 with a new value</td></tr>
+      <tr><td><code>last = songs.pop()</code></td><td>Removes the <strong>last</strong> item and hands it back, so you can store it</td></tr>
+      <tr><td><code>first = songs.pop(0)</code></td><td>Removes the item at index 0 and hands it back</td></tr>
+      <tr><td><code>del songs[1]</code></td><td>Deletes the item at index 1 (nothing is handed back)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p><strong>Step by step:</strong> watch the list change after each line.</p>
+  <pre class="dark"><code>songs = ["Intro", "Skyline", "Rainfall"]
+songs.append("Echoes")         <span class="c"># ['Intro', 'Skyline', 'Rainfall', 'Echoes']</span>
+songs.insert(0, "Warm Up")     <span class="c"># ['Warm Up', 'Intro', 'Skyline', 'Rainfall', 'Echoes']</span>
+songs[2] = "Skyline (Live)"    <span class="c"># ['Warm Up', 'Intro', 'Skyline (Live)', 'Rainfall', 'Echoes']</span>
+last = songs.pop()             <span class="c"># last is 'Echoes'</span>
+first = songs.pop(0)           <span class="c"># first is 'Warm Up'</span>
+del songs[1]                   <span class="c"># ['Intro', 'Rainfall']</span></code></pre>
+  <div class="idea">💡 <strong>Index numbers move!</strong> After an <code>insert()</code> or a removal, the items after it shift along, so their index numbers change. Trace carefully, one line at a time.</div>
+
+  <h4>🔮 Guess, then Run</h4>
+  <div class="sandbox">
+<textarea spellcheck="false">nums = [5, 10, 15]
+nums.append(20)
+nums.insert(1, 7)
+nums[0] = 1
+x = nums.pop()
+print(nums, x, len(nums))</textarea>
+  </div>
+  <details class="answer">
+    <summary>▶ Show answer</summary>
+    <pre class="dark"><code>[1, 7, 10, 15] 20 4</code></pre>
+    <p style="margin: 0;">After <code>append</code> the list is <code>[5, 10, 15, 20]</code>. After <code>insert(1, 7)</code> it is <code>[5, 7, 10, 15, 20]</code>. Then index 0 becomes <code>1</code>, and <code>pop()</code> removes the 20.</p>
+  </details>
+
+  <div class="task">
+    <h4>🛠️ Task 2: Bus Route Update</h4>
+    <p>A bus company is changing a route. Make each change to the list <code>stops</code>, <strong>in this order</strong>:</p>
+    <ol class="steps">
+      <li>Add <code>"Hospital"</code> to the end, using <code>append()</code>.</li>
+      <li>Add <code>"Market"</code> at index 1, using <code>insert()</code>.</li>
+      <li>The Library has closed. Replace <code>"Library"</code> with <code>"Museum"</code>, using its index. (Work out where it is <em>now</em>!)</li>
+      <li>Remove the first stop using <code>pop(0)</code>, and store it in <code>removed</code>.</li>
+    </ol>
+    <p><strong>Expected Output:</strong></p>
+    <pre class="dark"><code>['Market', 'Park', 'Museum', 'Hospital']
+Station</code></pre>
+    <div class="sandbox" data-check="t2" data-verify="Check Task 2">
+<textarea spellcheck="false">stops = ["Station", "Park", "Library"]
+
+# Make the four changes below
+
+
+print(stops)
+print(removed)</textarea>
+    </div>
+    <details class="hint">
+      <summary>💡 Need a hint?</summary>
+      <p style="margin: 0;">Add <code>print(stops)</code> after each step to watch the list change. After step 2, the list is <code>['Station', 'Market', 'Park', 'Library', 'Hospital']</code>, so the Library is at index 3.</p>
+    </details>
+  </div>
+
+  <div class="guide"><strong>Remember:</strong>
+    <ul>
+      <li><code>append()</code> adds to the end. <code>insert(i, x)</code> adds at index <code>i</code>.</li>
+      <li><code>pop()</code> removes and hands back the last item. <code>pop(0)</code> does the same for the first item.</li>
+      <li><code>del list[i]</code> removes an item without handing it back.</li>
+      <li>Index numbers shift after you add or remove an item.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= PART 3 ================= -->
+<div class="card" id="part3">
+  <h3>Part 3: Looping Through a List</h3>
+  <div class="instruction">👉 INSTRUCTION: Learn the two ways to loop through a list, run the example, then complete Task 3.</div>
+
+  <p>To <span class="key">traverse</span> a list means to go through it, visiting every item in turn. A <code>for</code> loop does this for you. There are two ways to write it.</p>
+
+  <p><span class="step-label">Way 1: loop over the items.</span> Use this when you only need the <strong>values</strong>.</p>
+  <pre class="dark"><code>steps = [6200, 8450, 4300, 10100, 7600]     <span class="c"># steps walked each day</span>
+for day_steps in steps:
+    print(day_steps)                        <span class="c"># prints each value in turn</span></code></pre>
+
+  <p><span class="step-label">Way 2: loop over the index numbers.</span> Use this when you also need the <strong>position</strong>. <code>range(len(steps))</code> gives the numbers 0, 1, 2, 3, 4.</p>
+  <pre class="dark"><code>for i in range(len(steps)):
+    print(f"Day {i + 1}: {steps[i]}")       <span class="c"># Day 1: 6200, Day 2: 8450, ...</span></code></pre>
+
+  <p><span class="step-label">Adding up and counting.</span> Create a variable that starts at 0 <strong>before</strong> the loop, then update it <strong>inside</strong> the loop.</p>
+  <pre class="dark"><code>total = 0
+active_days = 0
+for day_steps in steps:
+    total = total + day_steps               <span class="c"># running total</span>
+    if day_steps &gt; 7000:
+        active_days = active_days + 1       <span class="c"># counter</span>
+
+print(total)                                <span class="c"># 36650</span>
+print(total / len(steps))                   <span class="c"># 7330.0  (the average)</span>
+print(active_days)                          <span class="c"># 3</span></code></pre>
+
+  <h4>🔮 Run and Explore</h4>
+  <p>Run this code, then change the <code>7000</code> to a different number and run it again.</p>
+  <div class="sandbox">
+<textarea spellcheck="false">steps = [6200, 8450, 4300, 10100, 7600]
+total = 0
+active_days = 0
+for i in range(len(steps)):
+    print(f"Day {i + 1}: {steps[i]}")
+    total = total + steps[i]
+    if steps[i] > 7000:
+        active_days = active_days + 1
+print("Total:", total)
+print("Active days:", active_days)</textarea>
+  </div>
+
+  <div class="task">
+    <h4>🛠️ Task 3: Lap Times</h4>
+    <p>A runner's lap times (in seconds) are stored in a list. Use <strong>one loop</strong> to work out:</p>
+    <ol class="steps">
+      <li><code>total_time</code>: all the lap times added together</li>
+      <li><code>quick_laps</code>: how many laps were <strong>under</strong> 50.5 seconds</li>
+    </ol>
+    <p>Then, after the loop, work out <code>average</code>: the total divided by the number of laps.</p>
+    <p><strong>Expected Output:</strong></p>
+    <pre class="dark"><code>256.5 51.3 3</code></pre>
+    <div class="sandbox" data-check="t3" data-verify="Check Task 3">
+<textarea spellcheck="false">lap_times = [52.3, 49.8, 55.1, 48.9, 50.4]
+
+# Set up total_time and quick_laps, loop through the list, then work out average
+
+
+print(f"{total_time:.1f} {average:.1f} {quick_laps}")</textarea>
+    </div>
+    <details class="hint">
+      <summary>💡 Need a hint?</summary>
+      <p style="margin: 0;">Start with <code>total_time = 0</code> and <code>quick_laps = 0</code>. Inside <code>for lap in lap_times:</code>, add <code>lap</code> to the total, and use <code>if lap &lt; 50.5:</code> to count. Do not use the shortcut <code>sum()</code>; write the loop yourself.</p>
+    </details>
+  </div>
+
+  <div class="guide"><strong>Remember:</strong>
+    <ul>
+      <li><code>for item in my_list:</code> gives you each <strong>value</strong>.</li>
+      <li><code>for i in range(len(my_list)):</code> gives you each <strong>index</strong>, so use <code>my_list[i]</code> to get the value.</li>
+      <li>Set totals and counters to 0 <strong>before</strong> the loop, not inside it.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= PART 4 ================= -->
+<div class="card" id="part4">
+  <h3>Part 4: 2D Lists (Tables)</h3>
+  <div class="instruction">👉 INSTRUCTION: Work through steps 1 to 3, guess the output of the sandbox code, then complete Task 4.</div>
+
+  <p><span class="step-label">Step 1: A list of lists.</span> A list can hold other lists. If each inner list is a <strong>row</strong>, you get a table. This is called a <span class="key">2D list</span> (2D means two-dimensional: rows and columns).</p>
+  <p>This 2D list shows the seats in a tiny cinema. <code>1</code> means booked and <code>0</code> means free.</p>
+  <pre class="dark"><code>seats = [[0, 1, 1, 0],      <span class="c"># row 0</span>
+         [1, 1, 0, 0],      <span class="c"># row 1</span>
+         [0, 0, 0, 1]]      <span class="c"># row 2</span></code></pre>
+
+  <div class="table-wrap">
+  <table class="grid2d" aria-label="The seats 2D list shown as a table">
+    <tr><th></th><th>column 0</th><th>column 1</th><th>column 2</th><th>column 3</th></tr>
+    <tr><th>row 0</th><td><b>0</b><span>[0][0]</span></td><td><b>1</b><span>[0][1]</span></td><td><b>1</b><span>[0][2]</span></td><td><b>0</b><span>[0][3]</span></td></tr>
+    <tr><th>row 1</th><td><b>1</b><span>[1][0]</span></td><td><b>1</b><span>[1][1]</span></td><td class="hl"><b>0</b><span>[1][2]</span></td><td><b>0</b><span>[1][3]</span></td></tr>
+    <tr><th>row 2</th><td><b>0</b><span>[2][0]</span></td><td><b>0</b><span>[2][1]</span></td><td><b>0</b><span>[2][2]</span></td><td><b>1</b><span>[2][3]</span></td></tr>
+  </table>
+  </div>
+
+  <p><span class="step-label">Step 2: Two indexes: row first, then column.</span></p>
+  <pre class="dark"><code>print(seats[1])         <span class="c"># [1, 1, 0, 0]  one index gives a whole ROW</span>
+print(seats[1][2])      <span class="c"># 0             two indexes give ONE seat: row 1, column 2</span>
+print(len(seats))       <span class="c"># 3             the number of rows</span>
+print(len(seats[0]))    <span class="c"># 4             the number of columns (items in one row)</span>
+seats[2][0] = 1         <span class="c"># book the seat at row 2, column 0</span></code></pre>
+  <div class="idea">💡 <strong>Say it out loud: "row, then column".</strong> <code>seats[1][2]</code> means "go to row 1, then across to column 2". Every row should have the same number of items.</div>
+
+  <p><span class="step-label">Step 3: Visit every cell with nested loops.</span> A <em>nested</em> loop is a loop inside a loop. The <strong>outer</strong> loop picks each row. The <strong>inner</strong> loop goes across every column in that row.</p>
+  <pre class="dark"><code>booked = 0
+for row in range(len(seats)):                <span class="c"># row = 0, 1, 2</span>
+    for col in range(len(seats[row])):       <span class="c"># col = 0, 1, 2, 3 for each row</span>
+        if seats[row][col] == 1:
+            booked = booked + 1
+print(booked)                                <span class="c"># 5</span></code></pre>
+  <p>To build an empty table, use a loop that adds a <strong>new</strong> row each time:</p>
+  <pre class="dark"><code>board = []
+for row in range(3):
+    board.append([0] * 4)        <span class="c"># [0] * 4 makes a new row: [0, 0, 0, 0]</span></code></pre>
+
+  <h4>🔮 Guess, then Run</h4>
+  <div class="sandbox">
+<textarea spellcheck="false">seats = [[0, 1, 1, 0],
+         [1, 1, 0, 0],
+         [0, 0, 0, 1]]
+print(seats[2])
+print(seats[0][1], seats[2][3])
+print(len(seats), len(seats[0]))
+
+free = 0
+for row in range(len(seats)):
+    for col in range(len(seats[row])):
+        if seats[row][col] == 0:
+            free = free + 1
+print(free)</textarea>
+  </div>
+  <details class="answer">
+    <summary>▶ Show answer</summary>
+    <pre class="dark"><code>[0, 0, 0, 1]
+1 1
+3 4
+7</code></pre>
+    <p style="margin: 0;">There are 12 seats in total (3 rows × 4 columns). 5 are booked, so 7 are free.</p>
+  </details>
+
+  <div class="task">
+    <h4>🛠️ Task 4: Rainfall Table</h4>
+    <p>Each <strong>row</strong> is a town and each <strong>column</strong> is a day. The numbers are millimetres of rain.</p>
+    <ol class="steps">
+      <li><code>total_rain</code>: the total of <strong>every</strong> cell, using nested loops</li>
+      <li><code>dry_days</code>: how many cells are <code>0</code></li>
+      <li><code>first_day_total</code>: the total of <strong>column 0</strong> only (day 1 in every town)</li>
+    </ol>
+    <p><strong>Expected Output:</strong></p>
+    <pre class="dark"><code>21 2 7</code></pre>
+    <div class="sandbox" data-check="t4" data-verify="Check Task 4">
+<textarea spellcheck="false">rainfall = [[2, 0, 6],
+            [1, 3, 0],
+            [4, 4, 1]]
+
+# Work out total_rain, dry_days and first_day_total below
+
+
+print(total_rain, dry_days, first_day_total)</textarea>
+    </div>
+    <details class="hint">
+      <summary>💡 Need a hint?</summary>
+      <p style="margin: 0;">Use the nested loops from Step 3 for the first two. For column 0 you only need <strong>one</strong> loop over the rows, adding <code>rainfall[row][0]</code> each time.</p>
+    </details>
+  </div>
+
+  <div class="guide"><strong>Remember:</strong>
+    <ul>
+      <li>A 2D list is a list of rows. <code>table[row][col]</code> reaches one cell.</li>
+      <li><code>len(table)</code> is the number of rows. <code>len(table[0])</code> is the number of columns.</li>
+      <li>Outer loop for rows, inner loop for columns.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= PART 5 ================= -->
+<div class="card" id="part5">
+  <h3>Part 5: Records</h3>
+  <div class="instruction">👉 INSTRUCTION: Read the explanation and run the example. There is no task here; you will use records in the Pre-Lesson Challenge.</div>
+
+  <p>Often you need to store <strong>several facts about one thing</strong>. For example, a book has an ID, a title and a year. A small list holding these facts is called a <span class="key">record</span>. Each fact is a <span class="key">field</span>.</p>
+  <pre class="dark"><code><span class="c"># fields: [book_id, title, year]</span>
+book = [1042, "The Hobbit", 1937]
+print(book[1])        <span class="c"># The Hobbit  (field 1 is always the title)</span></code></pre>
+  <p>Put many records into one list and you get a <strong>list of records</strong>. It is just a 2D list where each row is one thing, like a row in a spreadsheet.</p>
+  <pre class="dark"><code><span class="c"># fields: [name, animal, age]</span>
+pets = [["Milo", "dog", 4],
+        ["Luna", "cat", 2],
+        ["Pip", "rabbit", 1]]
+
+for pet in pets:                   <span class="c"># pet is one whole record each time</span>
+    print(pet[0], "is a", pet[1])  <span class="c"># Milo is a dog ...</span></code></pre>
+  <div class="idea">💡 <strong>Good habit:</strong> write a comment listing the field order, e.g. <code># fields: [name, animal, age]</code>. Then you always know that <code>pet[2]</code> is the age.</div>
+
+  <h4>🔮 Run and Explore</h4>
+  <p>This prints the records as a neat table using f-strings. Try adding a fourth pet to the list.</p>
+  <div class="sandbox">
+<textarea spellcheck="false"># fields: [name, animal, age]
+pets = [["Milo", "dog", 4],
+        ["Luna", "cat", 2],
+        ["Pip", "rabbit", 1]]
+
+total_age = 0
+for pet in pets:
+    print(f"{pet[0]:<6}{pet[1]:<8}{pet[2]:>2}")
+    total_age = total_age + pet[2]
+print("Total age:", total_age)</textarea>
+  </div>
+</div>
+
+<!-- ================= PART 6 ================= -->
+<div class="card" id="part6">
+  <h3>Part 6: Tuples and Converting</h3>
+  <div class="instruction">👉 INSTRUCTION: Read the explanation, then guess the output of the sandbox code before you run it.</div>
+
+  <p>A <span class="key">tuple</span> is like a list, but it uses <strong>round brackets</strong> and it is <span class="key">immutable</span>: once made, it can never be changed. Use a tuple for data that should stay fixed, such as a colour or a map position.</p>
+  <pre class="dark"><code>orange = (255, 128, 0)      <span class="c"># red, green and blue amounts</span>
+print(orange[0])            <span class="c"># 255  (indexes work the same as lists)</span>
+print(len(orange))          <span class="c"># 3</span>
+orange[0] = 200             <span class="c"># TypeError: a tuple cannot be changed</span></code></pre>
+  <div class="idea">⚠️ <strong>A tuple with one item needs a comma.</strong> <code>("x",)</code> is a tuple. Without the comma, <code>("x")</code> is just the string <code>"x"</code> in brackets.</div>
+
+  <h4>Converting between types</h4>
+  <div class="table-wrap">
+  <table class="std">
+    <thead><tr><th>Code</th><th>Result</th><th>What happened</th></tr></thead>
+    <tbody>
+      <tr><td><code>list((1, 2))</code></td><td><code>[1, 2]</code></td><td>tuple changed into a list</td></tr>
+      <tr><td><code>tuple(["a", "b"])</code></td><td><code>('a', 'b')</code></td><td>list changed into a tuple</td></tr>
+      <tr><td><code>set([3, 3, 4, 4])</code></td><td><code>{3, 4}</code></td><td>a <strong>set</strong> keeps one copy of each value, so duplicates disappear (but the order is not kept)</td></tr>
+      <tr><td><code>list("hey")</code></td><td><code>['h', 'e', 'y']</code></td><td>a string split into a list of its characters</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>🔮 Guess, then Run</h4>
+  <div class="sandbox">
+<textarea spellcheck="false">position = (10, 20)
+print(position[1])
+print(type(("x",)), type(("x")))
+print(list(position))
+print(set([5, 5, 6, 5]))
+print(list("ok"))</textarea>
+  </div>
+  <details class="answer">
+    <summary>▶ Show answer</summary>
+    <pre class="dark"><code>20
+&lt;class 'tuple'&gt; &lt;class 'str'&gt;
+[10, 20]
+{5, 6}
+['o', 'k']</code></pre>
+    <p style="margin: 0;"><code>type()</code> tells you what kind of value something is. The comma is what makes <code>("x",)</code> a tuple.</p>
+  </details>
+</div>
+
+<!-- ================= PART 7 ================= -->
+<div class="card" id="part7">
+  <h3>Part 7: Copying a List Safely</h3>
+  <div class="instruction">👉 INSTRUCTION: Read the explanation, then run the sandbox and compare the results.</div>
+
+  <p>This surprises almost everyone. <code>b = a</code> does <strong>not</strong> make a copy of a list. It gives the <strong>same</strong> list a second name. Change one, and you see the change through both names.</p>
+  <pre class="dark"><code>a = [1, 2, 3]
+b = a              <span class="c"># b is another name for the SAME list</span>
+b.append(4)
+print(a)           <span class="c"># [1, 2, 3, 4]  a has changed too!</span></code></pre>
+  <p>To make a real copy, use the <code>copy</code> library:</p>
+  <ul>
+    <li><code>copy.copy(a)</code> copies the list. This is fine for a simple list.</li>
+    <li><code>copy.deepcopy(a)</code> also copies every list <strong>inside</strong> it. Use this for a 2D list.</li>
+  </ul>
+
+  <h4>🔮 Run and Compare</h4>
+  <div class="sandbox">
+<textarea spellcheck="false">import copy
+
+a = [1, 2, 3]
+b = a
+c = copy.copy(a)
+b.append(4)
+print("a:", a, " c:", c)
+
+grid = [[1, 2], [3, 4]]
+shallow = copy.copy(grid)
+deep = copy.deepcopy(grid)
+shallow[0][0] = 99
+print("grid:", grid)
+print("deep:", deep)</textarea>
+  </div>
+  <details class="answer">
+    <summary>▶ What happened?</summary>
+    <pre class="dark"><code>a: [1, 2, 3, 4]  c: [1, 2, 3]
+grid: [[99, 2], [3, 4]]
+deep: [[1, 2], [3, 4]]</code></pre>
+    <p style="margin: 0;"><code>c</code> is a real copy, so it did not change. For the 2D list, <code>copy.copy()</code> copied only the outer list, so both names still share the same rows: changing <code>shallow</code> changed <code>grid</code> too. <code>deepcopy()</code> made fully separate rows.</p>
+  </details>
+</div>
+
+<!-- ================= CHALLENGE ================= -->
+<div class="card" id="challenge">
+  <h3>🎯 Pre-Lesson Challenge: Choose ONE</h3>
+  <div class="table-wrap">
+  <table class="std">
+    <thead><tr><th>Option</th><th>Level</th><th>Skills Used</th></tr></thead>
+    <tbody>
+      <tr><td><a href="#optA"><strong>Option A: Library Shelf</strong></a></td><td>Standard</td><td>A list of records, <code>append()</code>, a <code>for</code> loop, a counter, a running total and f-strings</td></tr>
+      <tr><td><a href="#optB"><strong>Option B: Grid Search</strong></a></td><td>Challenge</td><td>Two subroutines that take a 2D list as a parameter, nested loops, building a list, and returning a tuple</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin: 12px 0 0; font-size: 14px;">Not sure which to pick? If Parts 1 to 4 felt new and tricky, choose <strong>Option A</strong>. If you can already write subroutines and nested loops, choose <strong>Option B</strong>.</p>
+</div>
+
+<div class="card" id="optA">
+  <h3>Option A (Standard): Library Shelf</h3>
+  <div class="instruction">👉 INSTRUCTION: Complete every step below in order. Use the exact variable names given.</div>
+  <p><strong>Scenario:</strong> A school library stores each book as a <span class="key">record</span>: <code>[book_id, title, year, pages]</code>. The librarian wants to <span class="key">add a new book</span>, print a neat list, count the <span class="key">older books</span> and find the <span class="key">average length</span>.</p>
+  <ol class="steps">
+    <li>Use <code>append()</code> to add this record to the end of <code>books</code>: <code>[5005, "Coraline", 2002, 162]</code></li>
+    <li>Loop through <code>books</code>. For each book, print the title pushed left in a width of 12, then the year pushed right in a width of 6.</li>
+    <li>In the same loop, count how many books are from <strong>before 2000</strong> in <code>older_count</code>, and add up all the pages in <code>total_pages</code>.</li>
+    <li>After the loop, work out <code>average_pages</code> (total pages ÷ number of books) and print both results as shown.</li>
+  </ol>
+  <p><strong>Expected Output:</strong></p>
+  <pre class="dark"><code>The Hobbit    1937
+Holes         1998
+Wonder        2012
+Matilda       1988
+Coraline      2002
+Older books: 3
+Average pages: 252.0</code></pre>
+  <div class="sandbox" data-check="a" data-verify="Check Option A">
+<textarea spellcheck="false"># fields: [book_id, title, year, pages]
+books = [[1042, "The Hobbit", 1937, 310],
+         [2210, "Holes", 1998, 233],
+         [3307, "Wonder", 2012, 315],
+         [4120, "Matilda", 1988, 240]]
+
+# Step 1: append the new book
+# Steps 2 and 3: one loop that prints, counts and totals
+# Step 4: average_pages, then print the results
+</textarea>
+  </div>
+  <details class="hint">
+    <summary>💡 Need a hint?</summary>
+    <p style="margin: 0;">Inside <code>for book in books:</code>, the title is <code>book[1]</code>, the year is <code>book[2]</code> and the pages are <code>book[3]</code>. Print with <code>f"{book[1]:&lt;12}{book[2]:&gt;6}"</code>, and finish with <code>print(f"Average pages: {average_pages:.1f}")</code>.</p>
+  </details>
+  <div class="guide"><strong>What the Checker Looks For:</strong>
+    <ul>
+      <li>The new book is added with <code>append()</code>, so <code>books</code> has 5 records.</li>
+      <li><code>older_count</code> is <code>3</code>, <code>total_pages</code> is <code>1260</code> and <code>average_pages</code> is <code>252.0</code>.</li>
+      <li>Your output matches the expected output exactly.</li>
+      <li>Your code still works with a different list of books, so use a loop rather than typing in answers.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card" id="optB">
+  <h3>Option B (Challenge): Grid Search</h3>
+  <div class="instruction">👉 INSTRUCTION: Write both subroutines described below. Use the exact names given, then test them with the calls provided.</div>
+  <p><strong>Scenario:</strong> A puzzle game stores its board as a <span class="key">2D list</span> of numbers. The game needs to <span class="key">find where a number is</span> on the board and work out the <span class="key">total of each row</span>.</p>
+  <ol class="steps">
+    <li>Write <code>find_cell(grid, target)</code>. It searches the grid row by row and <code>return</code>s the position of the <strong>first</strong> cell equal to <code>target</code> as a <strong>tuple</strong> <code>(row, col)</code>. If <code>target</code> is not found, it returns <code>(-1, -1)</code>.</li>
+    <li>Write <code>row_totals(grid)</code>. It <code>return</code>s a new <strong>list</strong> holding the total of each row, in order.</li>
+    <li>Neither subroutine should print anything. They only return values. Do not use <code>sum()</code>; write the loops yourself.</li>
+  </ol>
+  <p><strong>Expected Output</strong> (using the test calls in the sandbox):</p>
+  <pre class="dark"><code>(1, 2)
+(-1, -1)
+[11, 15, 10]</code></pre>
+  <div class="sandbox" data-check="b" data-verify="Check Option B">
+<textarea spellcheck="false">def find_cell(grid, target):
+    # Write your subroutine here
+    return (-1, -1)
+
+
+def row_totals(grid):
+    # Write your subroutine here
+    return []
+
+
+board = [[4, 7, 0],
+         [2, 5, 8],
+         [9, 1, 0]]
+
+print(find_cell(board, 8))
+print(find_cell(board, 6))
+print(row_totals(board))</textarea>
+  </div>
+  <details class="hint">
+    <summary>💡 Need a hint?</summary>
+    <ul style="margin: 0; padding-left: 20px;">
+      <li>In <code>find_cell</code>, use nested loops and <code>return (row, col)</code> as soon as you find a match. The <code>return (-1, -1)</code> goes <strong>after</strong> both loops have finished.</li>
+      <li>In <code>row_totals</code>, start with <code>totals = []</code>. For each row, add up its items, then <code>totals.append(row_total)</code>.</li>
+    </ul>
+  </details>
+  <div class="guide"><strong>What the Checker Looks For:</strong>
+    <ul>
+      <li>Both subroutines exist with the exact names, and return their answers rather than printing them.</li>
+      <li><code>find_cell</code> returns a <strong>tuple</strong>, finds the <em>first</em> match when a number appears twice, and returns <code>(-1, -1)</code> when there is no match.</li>
+      <li>Both subroutines also pass extra hidden tests on grids of different sizes.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ================= CHECKLIST ================= -->
+<div class="card">
+  <h3>✔️ Before the Lesson Checklist</h3>
+  <div class="instruction">👉 INSTRUCTION: Tick each statement you are confident about. Bring any unticked ones to the lesson as questions.</div>
+  <ul class="checklist" id="checklist">
+    <li><label><input type="checkbox" data-key="c1"><span>I can explain why a list is better than lots of separate variables.</span></label></li>
+    <li><label><input type="checkbox" data-key="c2"><span>I can get an item with an index, and I know the first index is <code>0</code>.</span></label></li>
+    <li><label><input type="checkbox" data-key="c3"><span>I can use <code>append()</code>, <code>insert()</code>, <code>pop()</code> and <code>del</code>, and change an item with <code>list[i] = value</code>.</span></label></li>
+    <li><label><input type="checkbox" data-key="c4"><span>I can loop through a list to add up or count items.</span></label></li>
+    <li><label><input type="checkbox" data-key="c5"><span>I can use <code>table[row][col]</code> and nested loops with a 2D list.</span></label></li>
+    <li><label><input type="checkbox" data-key="c6"><span>I can explain what a record and a list of records are.</span></label></li>
+    <li><label><input type="checkbox" data-key="c7"><span>I can explain how a tuple is different from a list, and why <code>("x",)</code> needs a comma.</span></label></li>
+    <li><label><input type="checkbox" data-key="c8"><span>I can explain why <code>b = a</code> does not copy a list.</span></label></li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>🔗 Further Reading</h3>
+  <ul style="padding-left: 20px; margin: 0;">
+    <li><a href="https://docs.python.org/3/tutorial/datastructures.html#more-on-lists" target="_blank" rel="noopener" style="color: var(--blue);">Official Python Tutorial: More on Lists</a>: every list method, with examples.</li>
+    <li><a href="https://docs.python.org/3/tutorial/datastructures.html#tuples-and-sequences" target="_blank" rel="noopener" style="color: var(--blue);">Official Python Tutorial: Tuples and Sequences</a>: a short introduction to tuples.</li>
+    <li><a href="https://docs.python.org/3/library/copy.html" target="_blank" rel="noopener" style="color: var(--blue);">Python copy Module</a>: <code>copy()</code> and <code>deepcopy()</code> explained.</li>
+  </ul>
+</div>
+
+</div>
+
+<!-- Python marking code: runs the student's code in a fresh namespace and checks the results -->
+<script type="text/python" id="checker">
+import io, json, re, traceback, contextlib, copy
+
+class StudentError(Exception):
+    pass
+
+TIPS = [
+    ("list index out of range", "Tip: that index does not exist. The last index is len(my_list) - 1, or use -1."),
+    ("pop from empty list", "Tip: the list is already empty, so there is nothing to pop."),
+    ("does not support item assignment", "Tip: a tuple is immutable. Use a list if the values need to change."),
+    ("unsupported operand type(s) for +", "Tip: check you are adding numbers, not whole lists or text."),
+    ("is not defined", "Tip: check the name is spelt exactly as in the task, and that it is created before it is used."),
+]
+
+def _format_error(e):
+    if isinstance(e, SyntaxError):
+        return f"Line {e.lineno}: {type(e).__name__}: {e.msg}"
+    line = None
+    for fr in traceback.extract_tb(e.__traceback__):
+        if fr.filename == "<student>":
+            line = fr.lineno
+    where = f"Line {line}: " if line else ""
+    msg = f"{where}{type(e).__name__}: {e}"
+    for key, tip in TIPS:
+        if key in str(e):
+            msg += "\n" + tip
+            break
+    return msg
+
+def run_student(code):
+    """Used by the Run button. Returns an error message, or an empty string."""
+    try:
+        exec(compile(code, "<student>", "exec"), {"__name__": "__main__"})
+        return ""
+    except Exception as e:
+        return _format_error(e)
+
+def _run(code):
+    ns = {"__name__": "__main__"}
+    buf = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(buf):
+            exec(compile(code, "<student>", "exec"), ns)
+    except Exception as e:
+        raise StudentError(_format_error(e))
+    return ns, buf.getvalue()
+
+def _swap(code, var, literal):
+    """Replace the starting value of a variable (even a list over several lines) with new test data."""
+    m = re.search(rf"^([ \t]*){var}[ \t]*=[ \t]*", code, flags=re.M)
+    if not m:
+        return None
+    start, i = m.start(), m.end()
+    if i < len(code) and code[i] in "[(":
+        depth = 0
+        j = i
+        while j < len(code):
+            ch = code[j]
+            if ch in "[(":
+                depth += 1
+            elif ch in "])":
+                depth -= 1
+                if depth == 0:
+                    j += 1
+                    break
+            j += 1
+        end = j
+    else:
+        end = code.find("\n", i)
+        end = len(code) if end == -1 else end
+    return code[:start] + f"{m.group(1)}{var} = {literal}" + code[end:]
+
+class AltError(Exception):
+    pass
+
+def _run_alt(code):
+    try:
+        return _run(code)
+    except StudentError as e:
+        raise AltError("Your code works for this data, but it crashed when the checker tried different data:\n"
+                       + str(e) + "\nAvoid fixed numbers: use len() so your code works for any size.")
+
+def _r(ok, msg):
+    return json.dumps({"ok": ok, "msg": msg})
+
+def _need(ns, *names):
+    for name in names:
+        if name not in ns:
+            return f"No variable called {name} was found. Check the spelling."
+    return None
+
+def _dots(s):
+    return str(s).replace(" ", "·")
+
+HARDCODED = ("Your code works for this data, but not when the starting values change. "
+             "Calculate from the list instead of typing in the answer.")
+
+# ---------- Task 1 ----------
+def _t1(b):
+    return b[0], b[-1], len(b)
+
+def check_t1(code):
+    ns, _ = _run(code)
+    names = ("first_item", "last_item", "item_count")
+    miss = _need(ns, *names)
+    if miss: return _r(False, miss)
+    want = _t1(["bread", "milk", "eggs", "apples", "rice"])
+    for name, w in zip(names, want):
+        g = ns[name]
+        if g != w:
+            extra = ""
+            if name == "first_item" and g == "milk":
+                extra = " The first item is at index 0, not 1."
+            return _r(False, f"{name} is {g!r}, but it should be {w!r}.{extra}")
+    if not re.search(r"\[\s*-\s*1\s*\]", code):
+        return _r(False, "last_item is right, but the task asks for a negative index: basket[-1]")
+    if "len(" not in code:
+        return _r(False, "item_count is right, but the task asks you to use len().")
+    alt = _swap(code, "basket", '["tea", "jam"]')
+    if alt is None:
+        return _r(False, "Keep the starting line for basket.")
+    ns2, _ = _run_alt(alt)
+    if tuple(ns2.get(n) for n in names) != _t1(["tea", "jam"]):
+        return _r(False, HARDCODED)
+    return _r(True, "Correct! Index 0 for the first item, -1 for the last, and len() for the count. It also works for a different basket.")
+
+# ---------- Task 2 ----------
+def check_t2(code):
+    ns, _ = _run(code)
+    miss = _need(ns, "stops", "removed")
+    if miss: return _r(False, miss)
+    want = ["Market", "Park", "Museum", "Hospital"]
+    g = ns["stops"]
+    if ns["removed"] != "Station":
+        return _r(False, f"removed is {ns['removed']!r}, but it should be 'Station'. Use removed = stops.pop(0) as the LAST step.")
+    if g != want:
+        msg = f"stops is {g!r}\nExpected: {want!r}"
+        if isinstance(g, list) and "Library" in g:
+            msg += "\nThe Library is still there. After the insert, it has moved to index 3."
+        elif isinstance(g, list) and "Museum" in g and g.index("Museum") != 2:
+            msg += "\nThe Museum replaced the wrong stop. Print the list after each step to see where the Library is."
+        return _r(False, msg)
+    for need, label in (("append(", "append()"), ("insert(", "insert()"), ("pop(0)", "pop(0)")):
+        if need not in code:
+            return _r(False, f"Your list is right, but the task asks you to use {label}.")
+    if not re.search(r"stops\s*\[\s*\d\s*\]\s*=", code):
+        return _r(False, 'Your list is right, but the task asks you to replace the Library using its index, e.g. stops[3] = "Museum".')
+    return _r(True, "Correct! You traced how the index numbers moved after each change.")
+
+# ---------- Task 3 ----------
+def _t3(times):
+    total = 0
+    quick = 0
+    for t in times:
+        total = total + t
+        if t < 50.5:
+            quick = quick + 1
+    return total, quick, total / len(times)
+
+def _close(a, b):
+    try:
+        return abs(a - b) < 1e-6
+    except Exception:
+        return False
+
+def check_t3(code):
+    ns, _ = _run(code)
+    names = ("total_time", "quick_laps", "average")
+    miss = _need(ns, *names)
+    if miss: return _r(False, miss)
+    tt, q, av = _t3([52.3, 49.8, 55.1, 48.9, 50.4])
+    if not _close(ns["total_time"], tt):
+        return _r(False, f"total_time is {ns['total_time']!r}, but it should be {tt:.1f}. Did you set it to 0 before the loop, not inside it?")
+    if ns["quick_laps"] != q:
+        return _r(False, f"quick_laps is {ns['quick_laps']!r}, but 3 laps are under 50.5 seconds.")
+    if not _close(ns["average"], av):
+        return _r(False, f"average is {ns['average']!r}, but it should be {av:.1f}. Divide total_time by len(lap_times).")
+    if re.search(r"\bsum\s*\(", code):
+        return _r(False, "Your answers are right, but the task asks you to write the loop yourself, without sum().")
+    if not re.search(r"\bfor\b", code):
+        return _r(False, "Your answers are right, but the task asks you to use a loop.")
+    alt = _swap(code, "lap_times", "[60.0, 45.5, 50.0, 70.5]")
+    if alt is None:
+        return _r(False, "Keep the starting line for lap_times.")
+    ns2, _ = _run_alt(alt)
+    tt2, q2, av2 = _t3([60.0, 45.5, 50.0, 70.5])
+    if not (_close(ns2.get("total_time"), tt2) and ns2.get("quick_laps") == q2 and _close(ns2.get("average"), av2)):
+        return _r(False, HARDCODED)
+    return _r(True, "Correct! Your loop works out the total and the count, and it also works for a different set of laps.")
+
+# ---------- Task 4 ----------
+def _t4(grid):
+    total = dry = first = 0
+    for row in grid:
+        first = first + row[0]
+        for cell in row:
+            total = total + cell
+            if cell == 0:
+                dry = dry + 1
+    return total, dry, first
+
+def check_t4(code):
+    ns, _ = _run(code)
+    names = ("total_rain", "dry_days", "first_day_total")
+    miss = _need(ns, *names)
+    if miss: return _r(False, miss)
+    want = _t4([[2, 0, 6], [1, 3, 0], [4, 4, 1]])
+    for name, w in zip(names, want):
+        g = ns[name]
+        if g != w:
+            extra = ""
+            if name == "first_day_total" and g == 8:
+                extra = " That is the total of row 0. Column 0 means rainfall[row][0] for every row."
+            return _r(False, f"{name} is {g!r}, but it should be {w!r}.{extra}")
+    if re.search(r"\bsum\s*\(", code):
+        return _r(False, "Your answers are right, but try writing the loops yourself, without sum().")
+    alt = _swap(code, "rainfall", "[[0, 6, 0, 2], [3, 0, 1, 0]]")
+    if alt is None:
+        return _r(False, "Keep the starting lines for rainfall.")
+    ns2, _ = _run_alt(alt)
+    if tuple(ns2.get(n) for n in names) != _t4([[0, 6, 0, 2], [3, 0, 1, 0]]):
+        return _r(False, "Your answers are right for this table, but not for one with a different number of rows and columns. "
+                         "Use range(len(rainfall)) and range(len(rainfall[row])) instead of fixed numbers.")
+    return _r(True, "Correct! Your nested loops also work for a table of a different size.")
+
+# ---------- Option A ----------
+NEW_BOOK = [5005, "Coraline", 2002, 162]
+
+def _a(books):
+    books = copy.deepcopy(books) + [NEW_BOOK]
+    lines = []
+    older = 0
+    pages = 0
+    for b in books:
+        lines.append(f"{b[1]:<12}{b[2]:>6}")
+        if b[2] < 2000:
+            older = older + 1
+        pages = pages + b[3]
+    avg = pages / len(books)
+    lines.append(f"Older books: {older}")
+    lines.append(f"Average pages: {avg:.1f}")
+    return books, older, pages, avg, lines
+
+def _compare(out, want):
+    got = [l.rstrip() for l in out.rstrip("\n").split("\n")] if out.strip() else []
+    for n, w in enumerate(want):
+        if n >= len(got):
+            return f"Your output stops after {len(got)} line(s). Line {n + 1} should be:\n{_dots(w)}\n(· shows a space)"
+        if got[n] != w:
+            return f"Line {n + 1} does not match. (· shows a space)\nExpected: {_dots(w)}\nYours:    {_dots(got[n])}"
+    if len(got) > len(want):
+        return f"Your output has extra lines. It should have exactly {len(want)} lines."
+    return None
+
+START_BOOKS = [[1042, "The Hobbit", 1937, 310], [2210, "Holes", 1998, 233],
+               [3307, "Wonder", 2012, 315], [4120, "Matilda", 1988, 240]]
+TEST_BOOKS = [[7001, "Dune", 1965, 412], [7002, "Skellig", 1998, 182], [7003, "Pig Heart Boy", 1997, 160]]
+
+def check_a(code):
+    ns, out = _run(code)
+    miss = _need(ns, "books", "older_count", "total_pages", "average_pages")
+    if miss: return _r(False, miss)
+    books, older, pages, avg, lines = _a(START_BOOKS)
+    if ns["books"] != books:
+        if len(ns["books"]) == 4:
+            return _r(False, "books still has 4 records. Use books.append([5005, \"Coraline\", 2002, 162]) first.")
+        return _r(False, "books does not match. Add the new record to the END with append(), exactly as given.")
+    if ns["older_count"] != older:
+        return _r(False, f"older_count is {ns['older_count']!r}, but 3 books are from before 2000. Use if book[2] < 2000:")
+    if ns["total_pages"] != pages:
+        return _r(False, f"total_pages is {ns['total_pages']!r}, but it should be {pages}. The pages are field 3: book[3].")
+    if not _close(ns["average_pages"], avg):
+        return _r(False, f"average_pages is {ns['average_pages']!r}, but it should be {avg}. Divide by len(books).")
+    problem = _compare(out, lines)
+    if problem: return _r(False, problem)
+    if "append(" not in code:
+        return _r(False, "Your results are right, but the task asks you to add the book with append().")
+    alt = _swap(code, "books", repr(TEST_BOOKS))
+    if alt is None:
+        return _r(False, "Keep the starting lines for books.")
+    ns2, out2 = _run_alt(alt)
+    b2, o2, p2, a2, l2 = _a(TEST_BOOKS)
+    if ns2.get("older_count") != o2 or ns2.get("total_pages") != p2 or _compare(out2, l2):
+        return _r(False, HARDCODED)
+    return _r(True, "Correct! Your loop prints, counts and totals the records, and it also works for a different shelf of books.")
+
+# ---------- Option B ----------
+def _find(grid, target):
+    for r in range(len(grid)):
+        for c in range(len(grid[r])):
+            if grid[r][c] == target:
+                return (r, c)
+    return (-1, -1)
+
+def _totals(grid):
+    return [sum(row) for row in grid]
+
+FIND_TESTS = [
+    ([[4, 7, 0], [2, 5, 8], [9, 1, 0]], 8),
+    ([[4, 7, 0], [2, 5, 8], [9, 1, 0]], 6),
+    ([[4, 7, 0], [2, 5, 8], [9, 1, 0]], 0),
+    ([[3, 3], [3, 3]], 3),
+    ([[1, 2, 3, 4]], 4),
+    ([[5], [6], [7]], 7),
+    ([[1, 2], [3, 4]], 9),
+]
+TOTAL_TESTS = [
+    [[4, 7, 0], [2, 5, 8], [9, 1, 0]],
+    [[1, 2, 3, 4]],
+    [[5], [6], [7]],
+    [[0, 0], [10, -3]],
+]
+
+def _call(fn, *args):
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            return fn(*copy.deepcopy(args)), None
+    except Exception as e:
+        return None, _format_error(e)
+
+def check_b(code):
+    ns, _ = _run(code)
+    fc, rt = ns.get("find_cell"), ns.get("row_totals")
+    if not callable(fc):
+        return _r(False, "No subroutine called find_cell was found.")
+    if not callable(rt):
+        return _r(False, "No subroutine called row_totals was found.")
+    if re.search(r"\bsum\s*\(", code):
+        return _r(False, "Write the loops yourself, without sum().")
+    for grid, target in FIND_TESTS:
+        got, err = _call(fc, grid, target)
+        if err:
+            return _r(False, f"find_cell({grid}, {target}) caused an error:\n{err}")
+        want = _find(grid, target)
+        if got != want:
+            msg = f"find_cell({grid}, {target})\nExpected: {want!r}\nYours:    {got!r}"
+            if isinstance(got, list) and tuple(got) == want:
+                msg += "\nThe position is right, but it must be returned as a TUPLE: return (row, col)"
+            elif got is None:
+                msg += "\nNothing was returned. Use return, not print."
+            elif want == (-1, -1):
+                msg += "\nWhen the number is not found, return (-1, -1) after both loops have finished."
+            elif target in (0, 3):
+                msg += "\nThe number appears more than once. Return as soon as you find the FIRST one."
+            return _r(False, msg)
+        if not isinstance(got, tuple):
+            return _r(False, f"find_cell({grid}, {target}) returned {got!r}. It must be a tuple: return (row, col)")
+    for grid in TOTAL_TESTS:
+        got, err = _call(rt, grid)
+        if err:
+            return _r(False, f"row_totals({grid}) caused an error:\n{err}")
+        want = _totals(grid)
+        if got != want:
+            msg = f"row_totals({grid})\nExpected: {want!r}\nYours:    {got!r}"
+            if got is None:
+                msg += "\nNothing was returned. Use return, not print."
+            elif isinstance(got, list) and len(got) == len(want) and len(want) > 1 and got[-1] == sum(want):
+                msg += "\nThe totals keep growing. Reset the row total to 0 at the start of EACH row."
+            elif isinstance(got, list) and len(got) == 1 and len(want) > 1:
+                msg += "\nOnly one total came back. Reset the row total to 0 at the start of EACH row, and append it after each row."
+            return _r(False, msg)
+    return _r(True, f"Excellent! Both subroutines passed all {len(FIND_TESTS) + len(TOTAL_TESTS)} tests, including hidden ones on grids of different sizes.")
+
+CHECKS = {"t1": check_t1, "t2": check_t2, "t3": check_t3, "t4": check_t4, "a": check_a, "b": check_b}
+
+def verify(cid, code):
+    try:
+        return CHECKS[cid](code)
+    except StudentError as e:
+        return _r(False, "Your code has an error, so it could not be checked:\n" + str(e))
+    except AltError as e:
+        return _r(False, str(e))
+</script>
+
+<script>
+/* ===== TEACHER SETTING =====
+   Paste a YouTube EMBED link between the quotes, e.g.
+   "https://www.youtube.com/embed/VIDEO_ID"
+   Leave it empty to hide the "Watch First" section. */
+const VIDEO_EMBED_URL = "";
+
+(function () {
+  const statusEl = document.getElementById("py-status");
+  const STORE_KEY = "prep-u208-lists-checklist";
+  let pyodidePromise = null;
+
+  /* ---------- Video ---------- */
+  if (VIDEO_EMBED_URL) {
+    const f = document.createElement("iframe");
+    f.src = VIDEO_EMBED_URL;
+    f.title = "Working with Strings video";
+    f.allow = "accelerometer; encrypted-media; gyroscope; picture-in-picture";
+    f.allowFullscreen = true;
+    document.getElementById("video-frame").appendChild(f);
+  } else {
+    document.getElementById("video-card").style.display = "none";
+  }
+
+  /* ---------- Checklist (remembered in this browser only) ---------- */
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { saved = {}; }
+  document.querySelectorAll("#checklist input").forEach((box) => {
+    box.checked = !!saved[box.dataset.key];
+    box.addEventListener("change", () => {
+      saved[box.dataset.key] = box.checked;
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(saved)); } catch (e) {}
+    });
+  });
+
+  /* ---------- Python ---------- */
+  function getPython() {
+    if (!pyodidePromise) {
+      if (typeof loadPyodide === "undefined") {
+        statusEl.textContent = "⚠️ Python could not load. Check your internet connection and refresh the page.";
+        return Promise.reject(new Error("Pyodide script not loaded"));
+      }
+      pyodidePromise = loadPyodide().then((py) => {
+        py.runPython(document.getElementById("checker").textContent);
+        statusEl.textContent = "✅ Python is ready. Press Run (or Ctrl + Enter) in any sandbox.";
+        return py;
+      }).catch((err) => {
+        statusEl.textContent = "⚠️ Python could not load. Check your internet connection and refresh the page.";
+        pyodidePromise = null;
+        throw err;
+      });
+    }
+    return pyodidePromise;
+  }
+
+  function buildSandbox(box) {
+    const textarea = box.querySelector("textarea");
+    const starter = textarea.value;
+    const checkId = box.dataset.check;
+
+    const head = document.createElement("div");
+    head.className = "sandbox-head";
+    head.textContent = "🐍 Python Sandbox";
+    box.insertBefore(head, textarea);
+
+    const buttons = document.createElement("div");
+    buttons.className = "buttons";
+    const runBtn = document.createElement("button");
+    runBtn.className = "run";
+    runBtn.textContent = "▶ Run";
+    buttons.appendChild(runBtn);
+
+    let checkBtn = null;
+    if (checkId) {
+      checkBtn = document.createElement("button");
+      checkBtn.className = "check";
+      checkBtn.textContent = "✔ " + (box.dataset.verify || "Check");
+      buttons.appendChild(checkBtn);
+    }
+    const resetBtn = document.createElement("button");
+    resetBtn.className = "reset";
+    resetBtn.textContent = "↺ Reset";
+    buttons.appendChild(resetBtn);
+    box.appendChild(buttons);
+
+    const output = document.createElement("pre");
+    output.className = "output";
+    output.textContent = "Output will appear here.";
+    box.appendChild(output);
+
+    const feedback = document.createElement("div");
+    feedback.className = "feedback";
+    feedback.setAttribute("role", "status");
+    box.appendChild(feedback);
+
+    function setBusy(busy) {
+      runBtn.disabled = busy;
+      if (checkBtn) checkBtn.disabled = busy;
+    }
+
+    async function run() {
+      setBusy(true);
+      output.classList.remove("error");
+      feedback.className = "feedback";
+      output.textContent = "Running…";
+      let printed = "";
+      try {
+        const py = await getPython();
+        py.setStdout({ batched: (s) => { printed += s + "\n"; } });
+        const err = py.globals.get("run_student")(textarea.value);
+        if (err) {
+          output.classList.add("error");
+          output.textContent = (printed ? printed + "\n" : "") + err;
+        } else {
+          output.textContent = printed || "(Your code ran but did not print anything.)";
+        }
+      } catch (e) {
+        output.classList.add("error");
+        output.textContent = "Python is not available yet. Refresh the page and try again.";
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function check() {
+      setBusy(true);
+      feedback.className = "feedback";
+      try {
+        const py = await getPython();
+        const res = JSON.parse(py.globals.get("verify")(checkId, textarea.value));
+        feedback.textContent = (res.ok ? "✅ " : "❌ ") + res.msg;
+        feedback.className = "feedback " + (res.ok ? "pass" : "fail");
+      } catch (e) {
+        feedback.textContent = "❌ Python is not available yet. Refresh the page and try again.";
+        feedback.className = "feedback fail";
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    runBtn.addEventListener("click", run);
+    if (checkBtn) checkBtn.addEventListener("click", check);
+    resetBtn.addEventListener("click", () => {
+      textarea.value = starter;
+      output.classList.remove("error");
+      output.textContent = "Output will appear here.";
+      feedback.className = "feedback";
+    });
+
+    textarea.addEventListener("keydown", (e) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const s = textarea.selectionStart, end = textarea.selectionEnd;
+        textarea.value = textarea.value.slice(0, s) + "    " + textarea.value.slice(end);
+        textarea.selectionStart = textarea.selectionEnd = s + 4;
+      } else if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        run();
+      }
+    });
+  }
+
+  document.querySelectorAll(".sandbox").forEach(buildSandbox);
+  getPython().catch(() => {});
+})();
+</script>
+</body>
+</html>
